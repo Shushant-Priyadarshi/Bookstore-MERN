@@ -1,8 +1,10 @@
-import express from "express";
-import { getBook } from "../controller/book";
+const express =require("express")
+const {getBooks} = require("../controller/book")
 
-const router = express.Router();
+const bookRouter = express.Router();
 
-router.get("/", getBook);
+bookRouter.get("/", getBooks);
 
-export default router;
+module.exports={
+    bookRouter
+}

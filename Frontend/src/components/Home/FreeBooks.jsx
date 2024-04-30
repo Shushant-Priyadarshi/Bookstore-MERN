@@ -1,12 +1,26 @@
-import React from "react";
-import list from "../../../public/list.json";
+import {useState,useEffect} from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import Cards from "./Cards";
+import axios from "axios"
 
 function FreeBooks() {
-  const freeBooks = list.filter((data) => data.category === "free");
+  const [book,setBook] =useState([]);
+  useEffect(()=>{
+      const getBook =async()=>{
+        try{
+          const res =await axios.get("http://localhost:6969/book");
+          const data =res.data.filter((data) => data.category === "free");
+          console.log(data)
+          setBook(data)
+        }catch(e){
+          console.log("error:",e);
+        }
+      }
+      getBook();
+  },[])
+
   var settings = {
     dots: true,
     infinite: false,
@@ -36,7 +50,8 @@ function FreeBooks() {
         breakpoint: 480,
         settings: {
           slidesToShow: 1,
-          slidesToScroll: 1
+          slidesToScroll: 1,
+          
         }
       }
     ]
@@ -48,14 +63,14 @@ function FreeBooks() {
       <p>
         Browse through our extensive library featuring thousands of books,
         including bestsellers, classics, fiction, non-fiction, and more. From
-        gripping thrillers to heartwarming romances, there's a book waiting for
+        gripping thrillers to heartwarming romances, there is a book waiting for
         you.
       </p>
     </div>
 
     <div className="max-w-screen-2xl container mx-auto md:px-20 px-4 mt-7">
     <Slider {...settings}>
-        {freeBooks.map((item)=>(
+        {book.map((item)=>(
             <Cards item={item} key={item.id}/>
         ))}
       </Slider>

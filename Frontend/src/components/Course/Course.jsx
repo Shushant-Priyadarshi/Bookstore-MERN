@@ -1,10 +1,24 @@
 
 import Footer from "../Home/Footer";
 import Navbar from "../Home/Navbar";
-import list from "../../../public/list.json"
 import Cards from "../Home/Cards";
+import { useEffect, useState } from "react";
+import axios from "axios"
 
 function Course() {
+  const [book,setBook] =useState([]);
+  useEffect(()=>{
+      const getBook =async()=>{
+        try{
+          const res =await axios.get("http://localhost:6969/book");
+          console.log(res.data)
+          setBook(res.data)
+        }catch(e){
+          console.log("error:",e);
+        }
+      }
+      getBook();
+  },[])
   return (
     <>
       <Navbar />
@@ -23,7 +37,7 @@ function Course() {
         </div>
         <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-5">
             {
-                list.map((item)=>(
+                book.map((item)=>(
                     <Cards item={item} key={item.id}/>
                 ))
             }

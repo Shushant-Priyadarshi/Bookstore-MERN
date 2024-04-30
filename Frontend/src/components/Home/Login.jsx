@@ -1,6 +1,8 @@
-import  { useRef } from "react";
+import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 function Login() {
   const {
@@ -17,9 +19,35 @@ function Login() {
     }
   };
 
-  const onSubmit = (data) => {
-    console.log(data);
-    // Add your login logic here
+  const onSubmit = async (data) => {
+    const userInfo = {
+      email: data.email,
+      password: data.password,
+    };
+    axios
+      .post("http://localhost:6969/user/login", userInfo)
+      .then((res) => {
+        console.log(res.data);
+        if (res.data) {
+          toast.success("Login Successfull!");
+          document.getElementById("my_modal_5").close();
+          setTimeout(() => {
+            window.location.reload();
+            localStorage.setItem("Users", JSON.stringify(res.data.user));
+          }, 1000);
+        }
+      })
+      .catch((err) => {
+        if (err.response) {
+          console.log(err.response.data);
+          toast.error("Error: " + err.response.data.message);
+          setTimeout(()=>{},2000);
+        } else {
+          console.log(err);
+          toast.error("Error: Something went wrong. Please try again later.");
+          setTimeout(()=>{},2000);
+        }
+      });
   };
 
   return (
@@ -45,7 +73,9 @@ function Login() {
             className="border rounded-md outline-none w-full px-3 py-1 bg-white text-black"
           />
           {errors.email && (
-            <span className="text-sm dark:text-red-500 text-red-600">This field is required</span>
+            <span className="text-sm dark:text-red-500 text-red-600">
+              This field is required
+            </span>
           )}
         </div>
 
@@ -62,7 +92,9 @@ function Login() {
             className="border rounded-md outline-none w-full px-3 py-1 bg-white text-black"
           />
           {errors.password && (
-            <span className="text-sm  dark:text-red-500 text-red-600">This field is required</span>
+            <span className="text-sm  dark:text-red-500 text-red-600">
+              This field is required
+            </span>
           )}
         </div>
 
@@ -78,7 +110,9 @@ function Login() {
 
             <Link to={"/signup"}>
               No Account!{" "}
-              <span className="underline text-blue-500 cursor-pointer">Signup here</span>
+              <span className="underline text-blue-500 cursor-pointer">
+                Signup here
+              </span>
             </Link>
           </div>
         </form>

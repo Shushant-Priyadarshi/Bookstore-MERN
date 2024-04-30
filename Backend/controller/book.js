@@ -1,4 +1,4 @@
-import Book from "../model/book";
+const Book = require("../model/book")
 
 const getBooks = async (req, res) => {
   try {
@@ -10,4 +10,6 @@ const getBooks = async (req, res) => {
   }
 };
 
-export default getBooks;
+module.exports ={
+  getBooks
+}
